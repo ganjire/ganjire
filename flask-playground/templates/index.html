@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMDB Rating Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #prediction {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IMDB Rating Prediction</h1>
+        <form id="predict_form">
+            <label for="year">Year:</label>
+            <input type="number" id="year" name="year" required><br>
+            <label for="ranking">Ranking:</label>
+            <input type="number" id="ranking" name="ranking" required><br>
+            <label for="vote_count">Vote Count:</label>
+            <input type="number" id="vote_count" name="vote_count" required><br>
+            <button type="button" onclick="predictRating()">Predict</button>
+        </form>
+        <h2 id="prediction"></h2>
+        <h2 id="movie_title"></h2> <!-- Hier wird der Film-Titel angezeigt -->
+    </div>
+
+    <script>
+        function predictRating() {
+            const year = document.getElementById('year').value;
+            const ranking = document.getElementById('ranking').value;
+            const voteCount = document.getElementById('vote_count').value;
+
+            const data = {year, ranking, vote_count: voteCount};
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(prediction => {
+                document.getElementById('prediction').innerText = 'Predicted Rating: ' + prediction.rating_prediction;
+                
+            });
+        }
+    </script>
+</body>
+</html>
